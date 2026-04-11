@@ -66,6 +66,8 @@ Artifact files live alongside idea files: `ideas/{notion_id}-{research-brief|prd
 | **Design** | `stage=PRD, status=Approved` | Write design doc | `stage=Design, status=Pending Review` |
 | **Tech Spec** | `stage=Design, status=Approved` | Write tech spec | `stage=Tech Spec, status=Pending Review` |
 
+**Throughput:** Each stage processes up to 2 items per run independently. A single run can advance items across all 5 stages simultaneously — 2 new ideas classified, 2 research briefs written, 2 PRDs written, 2 design docs written, 2 tech specs written. The cap is per stage, not per run.
+
 **Feedback loop:** Set status → `Needs Revision` and update Notes. The next run rewrites that stage's artifact using your feedback and resets status to `Pending Review`.
 
 **Routing by type:**
@@ -123,7 +125,7 @@ scripts/
 The entire runtime runs on the Claude Pro cloud scheduled task feature. No separate API key, no compute costs. GitHub Actions free tier handles all sync.
 
 **One daily scheduled task, not per-stage tasks**
-Claude Pro allows 1 daily cloud scheduled session. All 5 pipeline stages run sequentially in a single prompt (`prompts/daily.md`) with a cap of 2 items per stage per run. Individual stage prompts exist in `prompts/` for manual interactive runs.
+Claude Pro allows 1 daily cloud scheduled session. All 5 pipeline stages run sequentially in a single prompt (`prompts/daily.md`). Each stage processes up to 2 items independently, so a single run can move work forward across every stage simultaneously. Individual stage prompts exist in `prompts/` for manual interactive runs.
 
 **Stage owned by agent, status owned by human**
 Early designs required the human to advance both status and stage to move an idea forward. This was confusing. The current design: the agent advances `stage` automatically after writing each artifact; the human only sets `status`. The human never needs to know what stage an idea is in to operate the system.
@@ -152,4 +154,3 @@ The agent appends classification notes at Intake but never overwrites the notes 
 - [ ] Auto-approve Research stage for obvious Feature Requests (skip the gate)
 - [ ] Slack/iMessage notification when items land in Review Queue
 - [ ] Multi-user support (other people can submit ideas via a form)
-
