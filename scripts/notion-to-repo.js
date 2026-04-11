@@ -20,10 +20,7 @@ function getProp(prop) {
 
 function parseFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
-  const match = content.match(/^---
-([\s\S]*?)
----
-?([\s\S]*)$/);
+  const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
   if (!match) return { frontmatter: {}, body: content };
   return {
     frontmatter: yaml.load(match[1]) || {},
