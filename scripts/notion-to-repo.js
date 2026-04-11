@@ -20,7 +20,10 @@ function getProp(prop) {
 
 function parseFile(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
-  const match = content.match(/^---\n([\s\S]*?)\n---\n?([\s\S]*)$/);
+  const match = content.match(/^---
+([\s\S]*?)
+---
+?([\s\S]*)$/);
   if (!match) return { frontmatter: {}, body: content };
   return {
     frontmatter: yaml.load(match[1]) || {},
@@ -30,13 +33,15 @@ function parseFile(filePath) {
 
 function writeFile(filePath, frontmatter, body = '') {
   const fm = yaml.dump(frontmatter, { lineWidth: -1 }).trimEnd();
-  fs.writeFileSync(filePath, `---\n${fm}\n---\n${body}`, 'utf8');
+  fs.writeFileSync(filePath, `---
+${fm}
+---
+${body}`, 'utf8');
 }
 
 async function main() {
   if (!fs.existsSync(IDEAS_DIR)) fs.mkdirSync(IDEAS_DIR, { recursive: true });
 
-  // Paginate through all Notion database pages
   const pages = [];
   let cursor;
   do {
@@ -69,12 +74,15 @@ async function main() {
       });
       created++;
     } else {
-      // Existing idea — only sync Chase-owned fields (status, notes, name)
-      // Stage, type, app are Claude-owned and must not be overwritten from Notion
+      // Existing idea — sync Chase-owned fields (name, status, notes, stage)
+      // type and app remain Claude-owned
       const { frontmatter, body } = parseFile(filePath);
+      const notionStage = getProp(p.Stage);
       frontmatter.name   = getProp(p.Name);
       frontmatter.status = getProp(p.Status) || frontmatter.status;
       frontmatter.notes  = getProp(p.Notes);
+      // Only update stage if Notion has a non-null value — allows manual stage overrides
+      if (notionStage) frontmatter.stage = notionStage;
       writeFile(filePath, frontmatter, body);
       updated++;
     }
