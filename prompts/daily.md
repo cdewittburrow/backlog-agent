@@ -19,6 +19,8 @@ created: <timestamp>
 
 Artifact files are named `{notion_id}-{artifact-type}.md` (suffixes: research-brief, prd, design, tech-spec). Idea files are named `{uuid}.md` only — no suffix.
 
+**Stage ownership:** The pipeline advances `stage` automatically. The user only ever changes `status` (Approved / Below the Line / Archived). Never wait for the user to manually advance the stage.
+
 Run each stage in order. Complete one stage fully before moving to the next.
 
 ---
@@ -44,7 +46,7 @@ For each:
 
 ## STAGE 2: RESEARCH
 
-Find idea files where `stage` is `Research` and `status` is `Pending Review`. Process maximum 2 items, oldest `created` first.
+Find idea files where `stage` is `Research` and `status` is `Pending Review` and no `{notion_id}-research-brief.md` exists yet. Process maximum 2 items, oldest `created` first.
 
 For each:
 1. Research using web search: problem, competitors, market landscape, technical constraints, reasons not to pursue.
@@ -64,10 +66,14 @@ For each:
 
 ## STAGE 3: PRD
 
-Find idea files where `stage` is `PRD` and `status` is `Approved`. Process maximum 2 items.
+Two cases to check (process maximum 2 items total across both cases):
+
+**Case A — Feature Request needs PRD written:** Find idea files where `stage` is `PRD`, `status` is `Pending Review`, and no `{notion_id}-prd.md` exists yet.
+
+**Case B — Research has been approved:** Find idea files where `stage` is `Research` and `status` is `Approved`.
 
 For each:
-1. Read idea file and `ideas/{notion_id}-research-brief.md` if it exists.
+1. Read idea file, and `ideas/{notion_id}-research-brief.md` if it exists.
 2. Write `ideas/{notion_id}-prd.md`:
 
 ```
@@ -81,13 +87,13 @@ For each:
 ## Decision log
 ```
 
-3. Update frontmatter: `status` → `Pending Review`. Do not change `stage` or `notes`.
+3. Update frontmatter: `stage` → `PRD`, `status` → `Pending Review`. Do not change `notes`.
 
 ---
 
 ## STAGE 4: DESIGN
 
-Find idea files where `stage` is `Design` and `status` is `Approved`. Process maximum 2 items.
+Find idea files where `stage` is `PRD` and `status` is `Approved`. Process maximum 2 items.
 
 For each:
 1. Read idea file, research brief, and PRD if they exist.
@@ -102,13 +108,13 @@ For each:
 ## Open questions
 ```
 
-3. Update frontmatter: `status` → `Pending Review`. Do not change `stage` or `notes`.
+3. Update frontmatter: `stage` → `Design`, `status` → `Pending Review`. Do not change `notes`.
 
 ---
 
 ## STAGE 5: TECH SPEC
 
-Find idea files where `stage` is `Tech Spec` and `status` is `Approved`. Process maximum 2 items.
+Find idea files where `stage` is `Design` and `status` is `Approved`. Process maximum 2 items.
 
 For each:
 1. Read all available context: idea file, research brief, PRD, design doc.
@@ -125,7 +131,7 @@ For each:
 ## Open questions
 ```
 
-3. Update frontmatter: `status` → `Pending Review`. Do not change `stage` or `notes`.
+3. Update frontmatter: `stage` → `Tech Spec`, `status` → `Pending Review`. Do not change `notes`.
 
 ---
 
