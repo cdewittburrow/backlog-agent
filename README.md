@@ -146,11 +146,16 @@ The agent appends classification notes at Intake but never overwrites the notes 
 - [ ] First Read features currently in Design stage: RSS schema normalization, story dismiss, image support
 
 **Medium term**
+- [ ] Acceptance criteria agent — translates approved PRDs into "this works when..." statements; sits between Tech Spec and development as a coding checklist
+- [ ] Test plan agent — generates a human-readable manual QA checklist from acceptance criteria; run through it before shipping each feature
+- [ ] Security review agent — flags auth, data handling, input validation, and third-party risks in the tech spec before build starts
 - [ ] Migrate to Claude API for faster, event-driven runs (no daily cap, trigger on Notion change)
 - [ ] Per-stage independent agents instead of one combined prompt
 - [ ] Research agent: add confidence score to recommendation (Pursue / Uncertain / Pass)
 
 **Longer term**
+- [ ] Release notes agent — turns git commits + PRD goal into user-facing changelog copy
+- [ ] Retro agent — post-ship review of whether the feature solved the problem stated in the PRD
 - [ ] Auto-approve Research stage for obvious Feature Requests (skip the gate)
 - [ ] Slack/iMessage notification when items land in Review Queue
 - [ ] Multi-user support (other people can submit ideas via a form)
