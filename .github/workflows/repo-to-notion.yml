@@ -4,12 +4,18 @@ on:
   push:
     branches: [main]
     paths: ['ideas/**']
+  workflow_dispatch:
+    inputs:
+      full_sync:
+        description: 'Sync all idea files (not just latest diff)'
+        required: false
+        default: 'true'
 
 jobs:
   sync:
     runs-on: ubuntu-latest
     # Skip commits made by notion-to-repo to avoid unnecessary API calls
-    if: "!contains(github.event.head_commit.message, '[notion-sync]')"
+    if: "github.event_name == 'workflow_dispatch' || !contains(github.event.head_commit.message, '[notion-sync]')"
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +33,11 @@ jobs:
       - name: Get changed idea files
         id: changed
         run: |
-          FILES=$(git diff --name-only HEAD~1 HEAD | grep '^ideas/' | tr '\n' ' ')
+          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+            FILES=$(ls ideas/*.md 2>/dev/null | grep -v '.gitkeep' | tr '\n' ' ')
+          else
+            FILES=$(git diff --name-only HEAD~1 HEAD | grep '^ideas/' | tr '\n' ' ')
+          fi
           echo "files=$FILES" >> $GITHUB_OUTPUT
 
       - name: Sync to Notion
