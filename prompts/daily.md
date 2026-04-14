@@ -50,7 +50,7 @@ For each:
 
 **Needs Revision:** Find idea files where `stage` is `Research` and `status` is `Needs Revision`. For each, read the notes for feedback, rewrite `ideas/{notion_id}-research-brief.md` incorporating that feedback, set `status` → `Pending Review`. Do not change `stage` or other notes.
 
-**New work:** Find idea files where `stage` is `Research` and `status` is `Pending Review` and no `{notion_id}-research-brief.md` exists yet. Process maximum 2 items, oldest `created` first.
+**New work:** Find idea files where `stage` is `Research` and `status` is `Pending Review` and no `{notion_id}-research-brief.md` exists yet. Process oldest `created` first.
 
 For each new item:
 1. Research using web search: problem, competitors, market landscape, technical constraints, reasons not to pursue.
@@ -72,7 +72,7 @@ For each new item:
 
 **Needs Revision:** Find idea files where `stage` is `PRD` and `status` is `Needs Revision`. For each, read the notes for feedback, rewrite `ideas/{notion_id}-prd.md` incorporating that feedback, set `status` → `Pending Review`. Do not change `stage` or other notes.
 
-**New work** (process maximum 2 items total across both cases):
+**New work:**
 
 *Case A — Feature Request needs PRD written:* Find idea files where `stage` is `PRD`, `status` is `Pending Review`, and no `{notion_id}-prd.md` exists yet.
 
@@ -101,7 +101,7 @@ For each new item:
 
 **Needs Revision:** Find idea files where `stage` is `Design` and `status` is `Needs Revision`. For each, read the notes for feedback, rewrite `ideas/{notion_id}-design.md` incorporating that feedback, set `status` → `Pending Review`. Do not change `stage` or other notes.
 
-**New work:** Find idea files where `stage` is `PRD` and `status` is `Approved`. Process maximum 2 items.
+**New work:** Find idea files where `stage` is `PRD` and `status` is `Approved`.
 
 For each:
 1. Read idea file, research brief, and PRD if they exist.
@@ -124,7 +124,7 @@ For each:
 
 **Needs Revision:** Find idea files where `stage` is `Tech Spec` and `status` is `Needs Revision`. For each, read the notes for feedback, rewrite `ideas/{notion_id}-tech-spec.md` incorporating that feedback, set `status` → `Pending Review`. Do not change `stage` or other notes.
 
-**New work:** Find idea files where `stage` is `Design` and `status` is `Approved`. Process maximum 2 items.
+**New work:** Find idea files where `stage` is `Design` and `status` is `Approved`.
 
 For each:
 1. Read all available context: idea file, research brief, PRD, design doc.
