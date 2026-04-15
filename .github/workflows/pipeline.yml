@@ -5,7 +5,7 @@ on:
     branches: [main]
     paths: ['ideas/**']
   schedule:
-    - cron: '17 * * * *'  # hourly fallback, off the :00 mark
+    - cron: '17 14 * * *'  # daily at 8AM MT (14:00 UTC), off the :00 mark
   workflow_dispatch:
 
 concurrency:
