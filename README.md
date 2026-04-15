@@ -30,10 +30,10 @@ The Notion MCP connector works in interactive Claude sessions but has known bugs
 **Sync layer (GitHub Actions):**
 - `notion-to-repo.yml` — polls Notion hourly, writes/updates idea files. Only syncs Chase-owned fields (name, status, notes) to avoid overwriting agent work. Commits tagged `[notion-sync]`.
 - `repo-to-notion.yml` — triggers on push to `ideas/**`, syncs properties and artifact sub-pages back to Notion. Skips `[notion-sync]` commits to prevent loops. Supports `workflow_dispatch` for full re-sync of all files.
-- `pipeline.yml` — triggers on push to `ideas/**` (skips `[pipeline]` commits to prevent loops) and hourly at :17 as a fallback. Installs Claude Code CLI, runs `prompts/daily.md`, commits results tagged `[pipeline]`.
+- `pipeline.yml` — triggers on push to `ideas/**` (skips `[pipeline]` commits to prevent loops) and daily at 8 AM MT as a fallback. Installs Claude Code CLI, runs `prompts/daily.md`, commits results tagged `[pipeline]`.
 
 **Agent runtime:**
-GitHub Actions installs the Claude Code CLI and runs `prompts/daily.md` against the repo on every Notion sync push. The pipeline commits trigger `repo-to-notion.yml`, which surfaces results in Notion within minutes. Worst-case lag from status change to Notion update: ~1 hour.
+GitHub Actions installs the Claude Code CLI and runs `prompts/daily.md` against the repo on every Notion sync push. The pipeline commits trigger `repo-to-notion.yml`, which surfaces results in Notion within minutes. Worst-case lag from status change to Notion update: ~1 hour. The daily cron at 8 AM MT is a safety net only — the push trigger is the primary driver and only fires when Notion actually syncs a change.
 
 **Required secrets:**
 - `ANTHROPIC_API_KEY` — Claude API key for the pipeline
@@ -137,6 +137,9 @@ GitHub Actions deliberately blocks workflows triggered by the default `GITHUB_TO
 
 **No per-stage item cap**
 An early cap of 2 items per stage per run was added to control cost during initial development. Removed once the system was stable — most items are Feature Requests that skip the expensive Research stage, so runs are cheap regardless of queue depth.
+
+**Cron reduced from hourly to daily after cost blowout**
+The original hourly cron fired every hour regardless of whether there was anything to do. Each run costs money even with nothing to process (CLI startup + reading all files). Reduced to a daily 8 AM MT fallback — the push trigger handles real work for free.
 
 **repo-to-notion.yml supports manual full-sync via workflow_dispatch**
 Added after the initial migration left artifacts in the repo that Notion had never seen (the PAT wasn't in place when those commits landed). Running the workflow manually with `workflow_dispatch` syncs all idea files rather than just the latest diff.
