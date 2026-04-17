@@ -1,0 +1,50 @@
+name: Sync App Context
+
+on:
+  schedule:
+    - cron: '0 8 * * 1'  # weekly, Monday 8AM UTC
+  workflow_dispatch:
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GH_PAT }}
+
+      - name: Fetch app READMEs into context/
+        env:
+          GH_TOKEN: ${{ secrets.GH_PAT }}
+        run: |
+          mkdir -p context
+
+          fetch_readme() {
+            local repo=$1
+            local slug=$2
+            local content
+            content=$(gh api repos/cdewittburrow/$repo/contents/README.md --jq '.content' 2>/dev/null | base64 -d)
+            if [ -n "$content" ]; then
+              echo "$content" > context/${slug}.md
+              echo "Updated context/${slug}.md from $repo"
+            else
+              echo "Warning: could not fetch README from $repo"
+            fi
+          }
+
+          fetch_readme pressbox         first-read
+          fetch_readme New-Garden-Tracker plot-tracker
+          fetch_readme brunch           just-pick-already
+          fetch_readme full-stack       fullstack
+          fetch_readme recipe-book      recipe-app
+
+      - name: Commit and push if changed
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git add context/
+          git diff --cached --quiet || git commit -m "chore: sync app context from READMEs [notion-sync]"
+          git push
