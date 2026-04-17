@@ -34,11 +34,18 @@ Find idea files where `stage` is `Intake` and `status` is `Pending Review`.
 For each:
 1. Classify as `New Product`, `Feature Request`, or `Bug Report`.
    - `New Product` — a brand new app or tool
-   - `Feature Request` — improvement to an existing app (Plot Tracker, Just Pick Already, First Read, Backlog, Other)
+   - `Feature Request` — improvement to an existing app
    - `Bug Report` — a defect in an existing app
 2. Update frontmatter:
    - `type`: classification
-   - `app`: relevant app if Feature Request or Bug Report, else null
+   - `app`: For Feature Request or Bug Report, use **exactly one** of these values (or `null` for New Product):
+     - `First Read` — personal daily news briefing app (repo: pressbox)
+     - `Plot Tracker` — garden/plot management app (repo: New-Garden-Tracker)
+     - `Just Pick Already` — group voting/swipe decision app (repo: brunch)
+     - `Fullstack` — vocabulary trainer for product teams (repo: full-stack)
+     - `Recipe App` — personal recipe library (repo: recipe-book)
+     - `Backlog` — this product development pipeline (repo: backlog-agent)
+     - `Other` — if it genuinely doesn't fit any of the above
    - `stage`: New Product → `Research` | Feature Request → `PRD` | Bug Report → `Tech Spec`
    - `status`: leave as `Pending Review`
    - `notes`: append 2–3 sentence classification note. Do not overwrite existing notes.
@@ -80,7 +87,14 @@ For each new item:
 
 For each new item:
 1. Read idea file, and `ideas/{notion_id}-research-brief.md` if it exists.
-2. Write `ideas/{notion_id}-prd.md`:
+2. If the idea has an `app` value (not null or Other), read `context/{app-slug}.md` for current app context before writing the PRD. App slug mapping:
+   - `First Read` → `context/first-read.md`
+   - `Plot Tracker` → `context/plot-tracker.md`
+   - `Just Pick Already` → `context/just-pick-already.md`
+   - `Fullstack` → `context/fullstack.md`
+   - `Recipe App` → `context/recipe-app.md`
+   - `Backlog` → `context/backlog.md`
+3. Write `ideas/{notion_id}-prd.md`:
 
 ```
 ## Problem
@@ -93,7 +107,7 @@ For each new item:
 ## Decision log
 ```
 
-3. Update frontmatter: `stage` → `PRD`, `status` → `Pending Review`. Do not change `notes`.
+4. Update frontmatter: `stage` → `PRD`, `status` → `Pending Review`. Do not change `notes`.
 
 ---
 
